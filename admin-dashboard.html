@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | JobConnect</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="w-64 bg-blue-950 text-white p-5 hidden md:block">
+    <h1 class="text-2xl font-bold mb-8">JobConnect</h1>
+    <nav class="space-y-3">
+        <button onclick="showSection('dashboard')" class="block w-full text-left p-2 hover:bg-blue-800 rounded">Dashboard</button>
+        <button onclick="showSection('users')" class="block w-full text-left p-2 hover:bg-blue-800 rounded">Manage Users</button>
+        <button onclick="showSection('recruiters')" class="block w-full text-left p-2 hover:bg-blue-800 rounded">Recruiters</button>
+        <button onclick="showSection('jobs')" class="block w-full text-left p-2 hover:bg-blue-800 rounded">Manage Jobs</button>
+        <button onclick="showSection('applications')" class="block w-full text-left p-2 hover:bg-blue-800 rounded">Applications</button>
+        <button onclick="showSection('reports')" class="block w-full text-left p-2 hover:bg-blue-800 rounded">Reports</button>
+        <button onclick="showSection('settings')" class="block w-full text-left p-2 hover:bg-blue-800 rounded">Settings</button>
+        <button onclick="logout()" class="block w-full text-left p-2 text-red-300">Logout</button>
+    </nav>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="flex-1 p-5 md:p-8">
+
+<header class="flex justify-between items-center mb-8">
+    <div>
+        <h2 class="text-2xl font-bold">Admin Dashboard</h2>
+        <p class="text-gray-500">Welcome, Administrator!</p>
+    </div>
+    <span class="bg-blue-100 p-3 rounded-full">👤 Admin</span>
+</header>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page">
+    <h2 class="text-xl font-bold mb-5">Website Overview</h2>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white p-5 rounded-xl shadow">
+            <p class="text-gray-500">Total Users</p>
+            <h2 id="userCount" class="text-3xl font-bold text-blue-600">0</h2>
+        </div>
+        <div class="bg-white p-5 rounded-xl shadow">
+            <p class="text-gray-500">Recruiters</p>
+            <h2 id="recruiterCount" class="text-3xl font-bold text-green-600">0</h2>
+        </div>
+        <div class="bg-white p-5 rounded-xl shadow">
+            <p class="text-gray-500">Total Jobs</p>
+            <h2 id="jobCount" class="text-3xl font-bold text-orange-500">0</h2>
+        </div>
+        <div class="bg-white p-5 rounded-xl shadow">
+            <p class="text-gray-500">Applications</p>
+            <h2 id="applicationCount" class="text-3xl font-bold text-purple-600">0</h2>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="font-bold text-lg mb-3">Admin Responsibilities</h3>
+        <p class="text-gray-600">Manage users, verify recruiters, approve job posts, remove fake jobs and monitor applications from one place.</p>
+    </div>
+</section>
+
+<!-- MANAGE USERS -->
+<section id="users" class="page hidden bg-white p-6 rounded-xl shadow">
+    <h2 class="text-xl font-bold mb-4">Manage All Users</h2>
+    <input id="userSearch" oninput="showUsers()" placeholder="Search users..."
+    class="border p-3 rounded-lg w-full mb-4">
+
+    <div class="overflow-x-auto">
+    <table class="w-full text-left">
+        <thead class="bg-blue-50">
+            <tr>
+                <th class="p-3">Name</th>
+                <th class="p-3">Email</th>
+                <th class="p-3">Role</th>
+                <th class="p-3">Account</th>
+                <th class="p-3">Action</th>
+            </tr>
+        </thead>
+        <tbody id="userList"></tbody>
+    </table>
+    </div>
+</section>
+
+<!-- RECRUITERS -->
+<section id="recruiters" class="page hidden bg-white p-6 rounded-xl shadow">
+    <h2 class="text-xl font-bold mb-4">Recruiter Verification</h2>
+    <div class="overflow-x-auto">
+    <table class="w-full text-left">
+        <thead class="bg-blue-50">
+            <tr>
+                <th class="p-3">Recruiter</th>
+                <th class="p-3">Company</th>
+                <th class="p-3">Email</th>
+                <th class="p-3">Verification</th>
+                <th class="p-3">Action</th>
+            </tr>
+        </thead>
+        <tbody id="recruiterList"></tbody>
+    </table>
+    </div>
+</section>
+
+<!-- MANAGE JOBS -->
+<section id="jobs" class="page hidden bg-white p-6 rounded-xl shadow">
+    <h2 class="text-xl font-bold mb-4">Manage Job Posts</h2>
+    <div class="overflow-x-auto">
+    <table class="w-full text-left">
+        <thead class="bg-blue-50">
+            <tr>
+                <th class="p-3">Job Title</th>
+                <th class="p-3">Company</th>
+                <th class="p-3">Location</th>
+                <th class="p-3">Status</th>
+                <th class="p-3">Action</th>
+            </tr>
+        </thead>
+        <tbody id="jobList"></tbody>
+    </table>
+    </div>
+</section>
+
+<!-- APPLICATIONS -->
+<section id="applications" class="page hidden bg-white p-6 rounded-xl shadow">
+    <h2 class="text-xl font-bold mb-4">Monitor Applications</h2>
+    <div class="overflow-x-auto">
+    <table class="w-full text-left">
+        <thead class="bg-blue-50">
+            <tr>
+                <th class="p-3">Candidate</th>
+                <th class="p-3">Job</th>
+                <th class="p-3">Company</th>
+                <th class="p-3">Status</th>
+            </tr>
+        </thead>
+        <tbody id="applicationList"></tbody>
+    </table>
+    </div>
+</section>
+
+<!-- REPORTS -->
+<section id="reports" class="page hidden bg-white p-6 rounded-xl shadow">
+    <h2 class="text-xl font-bold mb-4">Website Reports</h2>
+    <p class="mb-2">Total Users: <b id="reportUsers">0</b></p>
+    <p class="mb-2">Total Recruiters: <b id="reportRecruiters">0</b></p>
+    <p class="mb-2">Total Job Posts: <b id="reportJobs">0</b></p>
+    <p class="mb-2">Total Applications: <b id="reportApplications">0</b></p>
+    <button onclick="updateDashboard()" class="mt-4 bg-blue-600 text-white px-5 py-2 rounded">
+        Refresh Reports
+    </button>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="page hidden bg-white p-6 rounded-xl shadow">
+    <h2 class="text-xl font-bold mb-4">Website Settings</h2>
+    <p class="text-gray-600 mb-4">JobConnect Administration Panel</p>
+    <label class="flex gap-2 items-center">
+        <input type="checkbox" id="notifications" checked>
+        Enable Admin Notifications
+    </label>
+    <button onclick="saveSettings()" class="mt-5 bg-blue-600 text-white px-5 py-2 rounded">
+        Save Settings
+    </button>
+</section>
+
+<footer class="text-center text-gray-500 py-6">
+    © 2026 JobConnect. All Rights Reserved.
+</footer>
+
+</main>
+</div>
+
+<script>
+
+// DEMO DATA
+function getData(key, fallback) {
+    return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback));
+}
+
+let users = getData("adminUsers", [
+    {name:"Rahul Kumar", email:"rahul@gmail.com", role:"Job Seeker", status:"Active"},
+    {name:"Amit Singh", email:"amit@gmail.com", role:"Recruiter", status:"Active"},
+    {name:"Priya Sharma", email:"priya@gmail.com", role:"Job Seeker", status:"Active"}
+]);
+
+let recruiters = getData("adminRecruiters", [
+    {name:"Amit Singh", company:"ABC Technologies", email:"amit@gmail.com", verified:false}
+]);
+
+let jobs = getData("adminJobs", [
+    {title:"Web Developer", company:"ABC Technologies", location:"Bangalore", status:"Pending"},
+    {title:"Python Developer", company:"Tech Solutions", location:"Delhi", status:"Approved"},
+    {title:"Data Analyst", company:"XYZ Company", location:"Patna", status:"Pending"}
+]);
+
+let applications = getData("adminApplications", [
+    {name:"Rahul Kumar", job:"Web Developer", company:"ABC Technologies", status:"Applied"},
+    {name:"Priya Sharma", job:"Python Developer", company:"Tech Solutions", status:"Shortlisted"}
+]);
+
+function saveData() {
+    localStorage.setItem("adminUsers", JSON.stringify(users));
+    localStorage.setItem("adminRecruiters", JSON.stringify(recruiters));
+    localStorage.setItem("adminJobs", JSON.stringify(jobs));
+    localStorage.setItem("adminApplications", JSON.stringify(applications));
+}
+
+function safe(value) {
+    return String(value ?? "").replace(/[&<>"']/g, c => ({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;",
+        '"':"&quot;", "'":"&#39;"
+    })[c]);
+}
+
+// SECTION NAVIGATION
+function showSection(id) {
+    document.querySelectorAll(".page").forEach(page => page.classList.add("hidden"));
+    document.getElementById(id).classList.remove("hidden");
+    if(id === "users") showUsers();
+    if(id === "recruiters") showRecruiters();
+    if(id === "jobs") showJobs();
+    if(id === "applications") showApplications();
+    if(id === "reports") updateDashboard();
+}
+
+// DASHBOARD STATISTICS
+function updateDashboard() {
+    document.getElementById("userCount").textContent = users.length;
+    document.getElementById("recruiterCount").textContent = recruiters.length;
+    document.getElementById("jobCount").textContent = jobs.length;
+    document.getElementById("applicationCount").textContent = applications.length;
+
+    document.getElementById("reportUsers").textContent = users.length;
+    document.getElementById("reportRecruiters").textContent = recruiters.length;
+    document.getElementById("reportJobs").textContent = jobs.length;
+    document.getElementById("reportApplications").textContent = applications.length;
+}
+
+// USER MANAGEMENT
+function showUsers() {
+    let search = (document.getElementById("userSearch")?.value || "").toLowerCase();
+    let list = document.getElementById("userList");
+    list.innerHTML = "";
+
+    users.forEach((u, i) => {
+        if(!(u.name + u.email + u.role).toLowerCase().includes(search)) return;
+
+        list.innerHTML += `
+        <tr class="border-b">
+            <td class="p-3">${safe(u.name)}</td>
+            <td class="p-3">${safe(u.email)}</td>
+            <td class="p-3">${safe(u.role)}</td>
+            <td class="p-3">${safe(u.status)}</td>
+            <td class="p-3 space-y-2">
+                <button onclick="toggleUser(${i})" class="bg-orange-500 text-white px-3 py-1 rounded">
+                    ${u.status === "Blocked" ? "Unblock" : "Block"}
+                </button>
+                <button onclick="deleteUser(${i})" class="bg-red-600 text-white px-3 py-1 rounded">
+                    Delete
+                </button>
+            </td>
+        </tr>`;
+    });
+}
+
+function toggleUser(i) {
+    users[i].status = users[i].status === "Blocked" ? "Active" : "Blocked";
+    saveData();
+    showUsers();
+    updateDashboard();
+}
+
+function deleteUser(i) {
+    if(confirm("Delete this user account?")) {
+        users.splice(i, 1);
+        saveData();
+        showUsers();
+        updateDashboard();
+    }
+}
+
+// RECRUITER VERIFICATION
+function showRecruiters() {
+    let list = document.getElementById("recruiterList");
+    list.innerHTML = "";
+
+    recruiters.forEach((r, i) => {
+        list.innerHTML += `
+        <tr class="border-b">
+            <td class="p-3">${safe(r.name)}</td>
+            <td class="p-3">${safe(r.company)}</td>
+            <td class="p-3">${safe(r.email)}</td>
+            <td class="p-3">${r.verified ? "Verified" : "Pending"}</td>
+            <td class="p-3">
+                <button onclick="verifyRecruiter(${i})"
+                class="bg-blue-600 text-white px-3 py-1 rounded">
+                    ${r.verified ? "Unverify" : "Verify"}
+                </button>
+            </td>
+        </tr>`;
+    });
+}
+
+function verifyRecruiter(i) {
+    recruiters[i].verified = !recruiters[i].verified;
+    saveData();
+    showRecruiters();
+}
+
+// JOB MANAGEMENT
+function showJobs() {
+    let list = document.getElementById("jobList");
+    list.innerHTML = "";
+
+    jobs.forEach((j, i) => {
+        list.innerHTML += `
+        <tr class="border-b">
+            <td class="p-3">${safe(j.title)}</td>
+            <td class="p-3">${safe(j.company)}</td>
+            <td class="p-3">${safe(j.location)}</td>
+            <td class="p-3">${safe(j.status)}</td>
+            <td class="p-3 space-y-2">
+                <button onclick="jobStatus(${i}, 'Approved')"
+                class="bg-green-600 text-white px-3 py-1 rounded">Approve</button>
+                <button onclick="jobStatus(${i}, 'Rejected')"
+                class="bg-orange-500 text-white px-3 py-1 rounded">Reject</button>
+                <button onclick="deleteJob(${i})"
+                class="bg-red-600 text-white px-3 py-1 rounded">Remove</button>
+            </td>
+        </tr>`;
+    });
+}
+
+function jobStatus(i, status) {
+    jobs[i].status = status;
+    saveData();
+    showJobs();
+}
+
+function deleteJob(i) {
+    if(confirm("Remove this job post?")) {
+        jobs.splice(i, 1);
+        saveData();
+        showJobs();
+        updateDashboard();
+    }
+}
+
+// APPLICATION MONITORING
+function showApplications() {
+    let list = document.getElementById("applicationList");
+    list.innerHTML = "";
+
+    applications.forEach(a => {
+        list.innerHTML += `
+        <tr class="border-b">
+            <td class="p-3">${safe(a.name)}</td>
+            <td class="p-3">${safe(a.job)}</td>
+            <td class="p-3">${safe(a.company)}</td>
+            <td class="p-3">${safe(a.status)}</td>
+        </tr>`;
+    });
+}
+
+// SETTINGS
+function saveSettings() {
+    localStorage.setItem("adminNotifications",
+        document.getElementById("notifications").checked);
+    alert("Settings saved successfully!");
+}
+
+// LOGOUT
+function logout() {
+    if(confirm("Are you sure you want to logout?")) {
+        localStorage.removeItem("adminLoggedIn");
+        window.location.href = "admin-login.html";
+    }
+}
+
+// ADMIN ACCESS CHECK
+if(localStorage.getItem("adminLoggedIn") !== "true") {
+    window.location.href = "admin-login.html";
+} else {
+    saveData();
+    updateDashboard();
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recruiter Dashboard | JobConnect</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="hidden md:block w-64 bg-blue-900 text-white p-5">
+<h1 class="text-2xl font-bold mb-8">JobConnect</h1>
+
+<nav class="space-y-5">
+<a href="#dashboard" class="block">Dashboard</a>
+<a href="#postjob" class="block">Post a Job</a>
+<a href="#manage" class="block">Manage Jobs</a>
+<a href="#applicants" class="block">View Applicants</a>
+<a href="#interviews" class="block">Interviews</a>
+<a href="#notifications" class="block">Notifications</a>
+<a href="#settings" class="block">Settings</a>
+<button onclick="logout()" class="text-red-300">Logout</button>
+</nav>
+</aside>
+
+<!-- MAIN -->
+<main class="flex-1 p-5 md:p-8">
+
+<header class="flex justify-between items-center mb-8">
+<div>
+<h2 class="text-2xl font-bold">Recruiter / HR Dashboard</h2>
+<p class="text-gray-500">Welcome back, Recruiter!</p>
+</div>
+
+
+<span class="bg-blue-100 p-3 rounded-full">👤</span>
+</header>
+
+
+<!-- STATISTICS -->
+<section id="dashboard" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+<div class="bg-white p-5 rounded-xl shadow">
+<p>Total Jobs</p><h2 id="totalJobs" class="text-3xl font-bold text-blue-600">0</h2>
+</div>
+<div class="bg-white p-5 rounded-xl shadow">
+<p>Applicants</p><h2 id="totalApplicants" class="text-3xl font-bold text-green-600">0</h2>
+</div>
+<div class="bg-white p-5 rounded-xl shadow">
+<p>Shortlisted</p><h2 id="totalShortlisted" class="text-3xl font-bold text-orange-500">0</h2>
+</div>
+<div class="bg-white p-5 rounded-xl shadow">
+<p>Rejected</p><h2 id="totalRejected" class="text-3xl font-bold text-red-600">0</h2>
+</div>
+</section>
+
+<!-- POST JOB -->
+<section id="postjob" class="bg-white p-6 rounded-xl shadow mb-8">
+<h2 class="text-xl font-bold mb-5">Post a New Job</h2>
+
+<form id="jobForm" class="grid md:grid-cols-2 gap-4">
+
+<input id="jobTitle" placeholder="Job Title" class="border p-3 rounded" required>
+<input id="company" placeholder="Company Name" class="border p-3 rounded" required>
+<input id="jobLocation" placeholder="Job Location" class="border p-3 rounded" required>
+
+<input id="salary" type="number" placeholder="Monthly Salary (₹)" class="border p-3 rounded" required>
+
+<select id="jobType" class="border p-3 rounded">
+<option>Full Time</option>
+<option>Part Time</option>
+<option>Internship</option>
+<option>Work From Home</option>
+</select>
+
+<input id="experience" placeholder="Experience Required" class="border p-3 rounded">
+
+<textarea id="description" placeholder="Job Description" class="border p-3 rounded md:col-span-2" required></textarea>
+
+<button class="bg-blue-600 text-white p-3 rounded md:col-span-2">Publish Job</button>
+
+</form>
+</section>
+
+<!-- MANAGE JOBS -->
+<section id="manage" class="bg-white p-6 rounded-xl shadow mb-8">
+<h2 class="text-xl font-bold mb-4">Manage Jobs</h2>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-blue-50">
+<tr>
+<th class="p-3">Job Title</th>
+<th class="p-3">Company</th>
+<th class="p-3">Location</th>
+<th class="p-3">Salary</th>
+<th class="p-3">Action</th>
+</tr>
+</thead>
+<tbody id="jobList"></tbody>
+</table>
+</div>
+</section>
+
+<!-- APPLICANTS -->
+<section id="applicants" class="bg-white p-6 rounded-xl shadow mb-8">
+<h2 class="text-xl font-bold mb-4">View Applicants</h2>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-blue-50">
+<tr>
+<th class="p-3">Candidate</th>
+<th class="p-3">Job Title</th>
+<th class="p-3">Company</th>
+<th class="p-3">Application Date</th>
+<th class="p-3">Status</th>
+</tr>
+</thead>
+<tbody id="applicantList"></tbody>
+</table>
+</div>
+</section>
+
+<!-- INTERVIEWS -->
+<section id="interviews" class="bg-white p-6 rounded-xl shadow mb-8">
+<h2 class="text-xl font-bold mb-3">Interview Management</h2>
+<p class="text-gray-500">Manage candidate interviews and schedules.</p>
+</section>
+
+<!-- NOTIFICATIONS -->
+<section id="notifications" class="bg-white p-6 rounded-xl shadow mb-8">
+<h2 class="text-xl font-bold mb-3">Notifications</h2>
+<p>🔔 Welcome to the Recruiter Dashboard!</p>
+<p class="mt-2">📩 Check your latest job applications.</p>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="bg-white p-6 rounded-xl shadow mb-8">
+<h2 class="text-xl font-bold mb-3">Account Settings</h2>
+<input placeholder="Company Email" class="border p-3 rounded w-full mb-3">
+<button class="bg-blue-600 text-white px-5 py-2 rounded">Save Settings</button>
+</section>
+
+<footer class="text-center text-gray-500 py-5">
+© 2026 JobConnect. All Rights Reserved.
+</footer>
+
+</main>
+</div>
+
+<script>
+
+// JOB DATA
+let jobs = JSON.parse(localStorage.getItem("recruiterJobs") || "[]");
+
+// APPLICATION DATA
+let applicants = JSON.parse(localStorage.getItem("applications") || "[]");
+
+// POST JOB
+document.getElementById("jobForm").onsubmit = function(e) {
+e.preventDefault();
+
+let job = {
+title: document.getElementById("jobTitle").value,
+company: document.getElementById("company").value,
+location: document.getElementById("jobLocation").value,
+salary: document.getElementById("salary").value,
+type: document.getElementById("jobType").value,
+experience: document.getElementById("experience").value,
+description: document.getElementById("description").value
+};
+
+jobs.push(job);
+localStorage.setItem("recruiterJobs", JSON.stringify(jobs));
+
+this.reset();
+showJobs();
+alert("Job published successfully!");
+};
+
+// DISPLAY JOBS
+function showJobs() {
+let list = document.getElementById("jobList");
+list.innerHTML = "";
+
+jobs.forEach((job, i) => {
+let row = document.createElement("tr");
+row.className = "border-b";
+
+[job.title, job.company, job.location, "₹" + job.salary].forEach(value => {
+let cell = document.createElement("td");
+cell.className = "p-3";
+cell.textContent = value;
+row.appendChild(cell);
+});
+
+let action = document.createElement("td");
+action.className = "p-3";
+
+let btn = document.createElement("button");
+btn.textContent = "Delete";
+btn.className = "bg-red-500 text-white px-3 py-1 rounded";
+btn.onclick = () => {
+jobs.splice(i, 1);
+localStorage.setItem("recruiterJobs", JSON.stringify(jobs));
+showJobs();
+};
+
+action.appendChild(btn);
+row.appendChild(action);
+list.appendChild(row);
+});
+
+document.getElementById("totalJobs").textContent = jobs.length;
+}
+
+// DISPLAY APPLICANTS
+function showApplicants() {
+let list = document.getElementById("applicantList");
+list.innerHTML = "";
+
+applicants.forEach((a, i) => {
+let row = document.createElement("tr");
+row.className = "border-b";
+
+let name = document.createElement("td");
+name.className = "p-3";
+name.textContent = a.name || "Job Seeker";
+
+let job = document.createElement("td");
+job.className = "p-3";
+job.textContent = a.job;
+
+let company = document.createElement("td");
+company.className = "p-3";
+company.textContent = a.company || "-";
+
+let date = document.createElement("td");
+date.className = "p-3";
+date.textContent = a.date;
+
+let status = document.createElement("td");
+status.className = "p-3";
+
+let select = document.createElement("select");
+select.className = "border p-2 rounded";
+
+["Applied","Under Review","Shortlisted","Interview Scheduled","Selected","Rejected"].forEach(s => {
+let option = document.createElement("option");
+option.value = s;
+option.textContent = s;
+select.appendChild(option);
+});
+
+select.value = a.status || "Applied";
+select.onchange = () => {
+applicants[i].status = select.value;
+localStorage.setItem("applications", JSON.stringify(applicants));
+updateStats();
+};
+
+status.appendChild(select);
+row.append(name, job, company, date, status);
+list.appendChild(row);
+});
+
+updateStats();
+}
+
+function updateStats() {
+document.getElementById("totalApplicants").textContent = applicants.length;
+document.getElementById("totalShortlisted").textContent = applicants.filter(a => a.status === "Shortlisted").length;
+document.getElementById("totalRejected").textContent = applicants.filter(a => a.status === "Rejected").length;
+}
+
+function logout() {
+if(confirm("Are you sure you want to logout?")) {
+window.location.href = "index.html";
+}
+}
+
+showJobs();
+showApplicants();
+
+</script>
+</body>
+</html>

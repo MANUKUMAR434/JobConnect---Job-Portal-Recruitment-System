@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Seeker Dashboard | JobConnect</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+<div class="flex min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="w-64 bg-blue-900 text-white p-5 hidden md:block">
+<h1 class="text-2xl font-bold mb-8">JobConnect</h1>
+<nav class="space-y-4">
+<a href="#dashboard" class="block hover:text-yellow-300">Dashboard</a>
+<a href="#profile" class="block hover:text-yellow-300">My Profile</a>
+<a href="#resume" class="block hover:text-yellow-300">Upload Resume</a>
+<a href="#jobs" class="block hover:text-yellow-300">Search Jobs</a>
+<a href="#saved" class="block hover:text-yellow-300">Saved Jobs</a>
+<a href="#applications" class="block hover:text-yellow-300">My Applications</a>
+<a href="#notifications" class="block hover:text-yellow-300">Notifications</a>
+<a href="#settings" class="block hover:text-yellow-300">Settings</a>
+<button onclick="logout()" class="text-red-300">Logout</button>
+</nav>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="flex-1 p-5 md:p-8">
+
+<header class="flex justify-between items-center mb-8">
+<div>
+<h2 class="text-2xl font-bold">Job Seeker Dashboard</h2>
+<p class="text-gray-500">Welcome back, Job Seeker!</p>
+</div>
+<span class="bg-blue-100 text-blue-700 p-3 rounded-full">👤</span>
+</header>
+
+<!-- DASHBOARD STATISTICS -->
+<section id="dashboard" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+<div class="bg-white p-5 rounded-xl shadow">
+<p>Total Applications</p>
+<h2 id="total" class="text-3xl font-bold text-blue-600">0</h2>
+</div>
+<div class="bg-white p-5 rounded-xl shadow">
+<p>Pending</p>
+<h2 id="pending" class="text-3xl font-bold text-orange-500">0</h2>
+</div>
+<div class="bg-white p-5 rounded-xl shadow">
+<p>Shortlisted</p>
+<h2 id="shortlisted" class="text-3xl font-bold text-green-600">0</h2>
+</div>
+<div class="bg-white p-5 rounded-xl shadow">
+<p>Rejected</p>
+<h2 id="rejected" class="text-3xl font-bold text-red-600">0</h2>
+</div>
+</section>
+
+<!-- PROFILE -->
+<section id="profile" class="bg-white p-6 rounded-xl shadow mb-8">
+<h2 class="text-xl font-bold mb-4">My Profile</h2>
+<form id="profileForm" class="grid md:grid-cols-2 gap-4">
+<input id="fullName" placeholder="Full Name" class="border p-3 rounded" required>
+<input id="email" type="email" placeholder="Email Address" class="border p-3 rounded" required>
+<input id="phone" placeholder="Mobile Number" class="border p-3 rounded">
+<input id="qualification" placeholder="Qualification" class="border p-3 rounded">
+<input id="skills" placeholder="Skills" class="border p-3 rounded">
+<input id="location" placeholder="Location" class="border p-3 rounded">
+<button class="bg-blue-600 text-white p-3 rounded md:col-span-2">Save Profile</button>
+</form>
+</section>
+
+<!-- RESUME UPLOAD -->
+<section id="resume" class="bg-white p-6 rounded-xl shadow mb-8">
+<h2 class="text-xl font-bold mb-4">Resume Management</h2>
+<input type="file" id="resumeFile" accept=".pdf,.doc,.docx" class="border p-3 rounded w-full">
+<button onclick="uploadResume()" class="bg-blue-600 text-white px-5 py-2 rounded mt-3">Upload Resume</button>
+<p id="resumeMessage" class="mt-3 text-green-600"></p>
+<a id="downloadResume" class="hidden text-blue-600 underline mt-2" download>Download Resume</a>
+</section>
+
+<!-- SEARCH JOBS -->
+<section id="jobs" class="bg-white p-6 rounded-xl shadow mb-8">
+<h2 class="text-xl font-bold mb-4">Search Available Jobs</h2>
+<input id="jobSearch" oninput="searchJobs()" placeholder="Search job title or location..." class="border p-3 rounded w-full mb-5">
+
+<div id="jobList" class="grid md:grid-cols-2 gap-4">
+
+<div class="job border p-5 rounded-lg" data-search="web developer bangalore">
+<h3 class="font-bold text-lg">Web Developer</h3>
+<p>Tech Solutions</p>
+<p>📍 Bangalore</p>
+<p>💰 ₹30,000 / Month</p>
+<button onclick="applyJob('Web Developer','Tech Solutions')" class="bg-blue-600 text-white px-4 py-2 rounded mt-3">Apply Now</button>
+<button onclick="saveJob('Web Developer')" class="border border-blue-600 text-blue-600 px-4 py-2 rounded mt-3">Save Job</button>
+</div>
+
+<div class="job border p-5 rounded-lg" data-search="python developer delhi">
+<h3 class="font-bold text-lg">Python Developer</h3>
+<p>Digital Company</p>
+<p>📍 Delhi</p>
+<p>💰 ₹35,000 / Month</p>
+<button onclick="applyJob('Python Developer','Digital Company')" class="bg-blue-600 text-white px-4 py-2 rounded mt-3">Apply Now</button>
+<button onclick="saveJob('Python Developer')" class="border border-blue-600 text-blue-600 px-4 py-2 rounded mt-3">Save Job</button>
+</div>
+
+<div class="job border p-5 rounded-lg" data-search="iti technician patna">
+<h3 class="font-bold text-lg">ITI Technician</h3>
+<p>ABC Industries</p>
+<p>📍 Patna</p>
+<p>💰 ₹18,000 / Month</p>
+<button onclick="applyJob('ITI Technician','ABC Industries')" class="bg-blue-600 text-white px-4 py-2 rounded mt-3">Apply Now</button>
+<button onclick="saveJob('ITI Technician')" class="border border-blue-600 text-blue-600 px-4 py-2 rounded mt-3">Save Job</button>
+</div>
+
+<div class="job border p-5 rounded-lg" data-search="data analyst pune">
+<h3 class="font-bold text-lg">Data Analyst</h3>
+<p>Smart Technology</p>
+<p>📍 Pune</p>
+<p>💰 ₹25,000 / Month</p>
+<button onclick="applyJob('Data Analyst','Smart Technology')" class="bg-blue-600 text-white px-4 py-2 rounded mt-3">Apply Now</button>
+<button onclick="saveJob('Data Analyst')" class="border border-blue-600 text-blue-600 px-4 py-2 rounded mt-3">Save Job</button>
+</div>
+
+</div>
+<p id="noJobs" class="hidden text-red-500 mt-4">No jobs found.</p>
+</section>
+
+<!-- SAVED JOBS -->
+<section id="saved" class="bg-white p-6 rounded-xl shadow mb-8">
+<h2 class="text-xl font-bold mb-4">Saved Jobs</h2>
+<ul id="savedList" class="list-disc pl-6"></ul>
+</section>
+
+<!-- APPLICATION TRACKING -->
+<section id="applications" class="bg-white p-6 rounded-xl shadow mb-8">
+<h2 class="text-xl font-bold mb-4">My Applications</h2>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-blue-50">
+<tr>
+<th class="p-3">Job Title</th>
+<th class="p-3">Company</th>
+<th class="p-3">Date</th>
+<th class="p-3">Status</th>
+</tr>
+</thead>
+<tbody id="applicationList"></tbody>
+</table>
+</div>
+</section>
+
+<!-- NOTIFICATIONS -->
+<section id="notifications" class="bg-white p-6 rounded-xl shadow mb-8">
+<h2 class="text-xl font-bold mb-3">Notifications</h2>
+<p>🔔 Welcome to JobConnect! Start applying for jobs.</p>
+<p class="mt-2">📄 Keep your resume updated.</p>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="bg-white p-6 rounded-xl shadow mb-8">
+<h2 class="text-xl font-bold mb-4">Account Settings</h2>
+<input type="password" id="newPassword" placeholder="Enter New Password" class="border p-3 rounded w-full mb-3">
+<button onclick="changePassword()" class="bg-blue-600 text-white px-5 py-2 rounded">Change Password</button>
+</section>
+
+<footer class="text-center text-gray-500 py-5">
+© 2026 JobConnect. All Rights Reserved.
+</footer>
+
+</main>
+</div>
+
+<script>
+// PROFILE
+document.getElementById("profileForm").onsubmit = function(e) {
+e.preventDefault();
+let profile = {
+name: fullName.value,
+email: email.value,
+phone: phone.value,
+qualification: qualification.value,
+skills: skills.value,
+location: location.value
+};
+localStorage.setItem("profile", JSON.stringify(profile));
+alert("Profile saved successfully!");
+};
+
+// LOAD PROFILE
+let profile = JSON.parse(localStorage.getItem("profile") || "null");
+if(profile) {
+fullName.value = profile.name;
+email.value = profile.email;
+phone.value = profile.phone;
+qualification.value = profile.qualification;
+skills.value = profile.skills;
+location.value = profile.location;
+}
+
+// RESUME UPLOAD
+let resumeURL = "";
+function uploadResume() {
+let file = document.getElementById("resumeFile").files[0];
+if(!file) return alert("Please select your resume.");
+if(!/\.(pdf|doc|docx)$/i.test(file.name)) return alert("Only PDF or DOC/DOCX files allowed.");
+if(file.size > 5 * 1024 * 1024) return alert("Maximum file size is 5 MB.");
+
+if(resumeURL) URL.revokeObjectURL(resumeURL);
+resumeURL = URL.createObjectURL(file);
+
+let link = document.getElementById("downloadResume");
+link.href = resumeURL;
+link.download = file.name;
+link.textContent = "Download " + file.name;
+link.classList.remove("hidden");
+
+document.getElementById("resumeMessage").textContent = "Resume uploaded for this session!";
+}
+
+// JOB SEARCH
+function searchJobs() {
+let search = document.getElementById("jobSearch").value.toLowerCase();
+let count = 0;
+document.querySelectorAll(".job").forEach(job => {
+let match = job.dataset.search.includes(search);
+job.style.display = match ? "block" : "none";
+if(match) count++;
+});
+document.getElementById("noJobs").classList.toggle("hidden", count > 0);
+}
+
+// SAVE JOBS
+let savedJobs = JSON.parse(localStorage.getItem("savedJobs") || "[]");
+function saveJob(job) {
+if(!savedJobs.includes(job)) savedJobs.push(job);
+localStorage.setItem("savedJobs", JSON.stringify(savedJobs));
+showSaved();
+}
+function showSaved() {
+document.getElementById("savedList").innerHTML = "";
+savedJobs.forEach(job => {
+let li = document.createElement("li");
+li.textContent = job;
+document.getElementById("savedList").appendChild(li);
+});
+}
+showSaved();
+
+// APPLY FOR JOB
+let applications = JSON.parse(localStorage.getItem("applications") || "[]");
+function applyJob(job, company) {
+if(applications.some(a => a.job === job)) return alert("You have already applied for this job.");
+applications.push({
+job: job,
+company: company,
+date: new Date().toLocaleDateString(),
+status: "Applied"
+});
+localStorage.setItem("applications", JSON.stringify(applications));
+showApplications();
+alert("Application submitted successfully!");
+}
+
+// APPLICATION TRACKING
+function showApplications() {
+let list = document.getElementById("applicationList");
+list.innerHTML = "";
+applications.forEach(a => {
+let row = document.createElement("tr");
+row.className = "border-b";
+let job = document.createElement("td");
+job.className = "p-3";
+job.textContent = a.job;
+let company = document.createElement("td");
+company.className = "p-3";
+company.textContent = a.company;
+let date = document.createElement("td");
+date.className = "p-3";
+date.textContent = a.date;
+let status = document.createElement("td");
+status.className = "p-3 text-blue-600 font-semibold";
+status.textContent = a.status;
+row.append(job, company, date, status);
+list.appendChild(row);
+});
+
+document.getElementById("total").textContent = applications.length;
+document.getElementById("pending").textContent = applications.filter(a => ["Applied","Under Review","Interview Scheduled"].includes(a.status)).length;
+document.getElementById("shortlisted").textContent = applications.filter(a => a.status === "Shortlisted").length;
+document.getElementById("rejected").textContent = applications.filter(a => a.status === "Rejected").length;
+}
+showApplications();
+
+// CHANGE PASSWORD DEMO
+function changePassword() {
+let password = document.getElementById("newPassword").value;
+if(password.length < 6) return alert("Password must be at least 6 characters.");
+alert("Demo only: Connect Flask backend to securely change your password.");
+}
+
+// LOGOUT
+function logout() {
+if(confirm("Are you sure you want to logout?")) {
+window.location.href = "index.html";
+}
+}
+</script>
+
+</body>
+</html>

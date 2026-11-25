@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobConnect - User Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+<div class="bg-white w-full max-w-md p-8 rounded-2xl shadow-xl">
+
+    <h1 class="text-3xl font-bold text-blue-700 text-center">JobConnect</h1>
+
+    <h2 class="text-2xl font-bold text-center mt-5">Login Account</h2>
+
+    <p class="text-gray-500 text-center mb-6">Welcome Back! Login to continue.</p>
+
+    <form id="loginForm" class="space-y-5">
+
+        <div>
+            <label class="block font-medium mb-2">Email Address</label>
+            <input type="email" id="email"
+            placeholder="Enter your email"
+            class="w-full border p-3 rounded-lg" required>
+        </div>
+
+        <div>
+            <label class="block font-medium mb-2">Password</label>
+            <input type="password" id="password"
+            placeholder="Enter your password"
+            class="w-full border p-3 rounded-lg" required>
+        </div>
+
+        <div class="flex justify-between text-sm">
+            <label><input type="checkbox"> Remember Me</label>
+            <a href="#" class="text-blue-600">Forgot Password?</a>
+        </div>
+
+        <button type="submit"
+        class="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700">
+            Login Now
+        </button>
+
+    </form>
+
+    <p class="text-center mt-6 text-gray-600">
+        Don't have an account?
+        <a href="register.html" class="text-blue-600 font-semibold">Register Now</a>
+    </p>
+
+    <p class="text-center mt-4">
+        <a href="index.html" class="text-gray-500">← Back to Home</a>
+    </p>
+
+</div>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    alert("Login form submitted! Connect backend for account verification.");
+});
+</script>
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+
+    if (email.trim() !== "" && password.trim() !== "") {
+        window.location.href = "index.html";
+    }
+});
+</script>
+</body>
+</html>
